@@ -7,6 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "packagerOpts": {
+      "assetExts": ["mp3"]
+    },
     "experiments": {
       "baseUrl": "/supersoundboardmaker"
     },
