@@ -51,4 +51,7 @@ normalize DIRECTORY:
     ' {} \;
 
 gh-pages:
+    cd expo-app
+    npx expo export -p web
+    cd ..
     npx gh-pages -t -d expo-app/dist
