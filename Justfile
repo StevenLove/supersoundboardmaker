@@ -49,3 +49,6 @@ normalize DIRECTORY:
         "$output_dir"; \
     echo "$output_dir"; \
     ' {} \;
+
+gh-pages:
+    npx gh-pages -t -d expo-app/dist
