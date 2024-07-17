@@ -69,6 +69,7 @@ const SoundBoard = () => {
   }, [soundBank, directories]);
   // Function to play a random sound from a given directory
   const playRandomSoundFromDirectory = (directory) => {
+    console.log("Playing random sound from directory", directory);
     const soundsInDirectory = soundBank.filter((sound) =>
       sound.path.startsWith(directory)
     );

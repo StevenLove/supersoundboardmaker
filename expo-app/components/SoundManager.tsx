@@ -30,6 +30,8 @@ export const SoundManagerProvider = ({ children }) => {
           },
         ]);
       }
+      console.log("soundbank", soundBank);
+      console.log("loaded sounds", loadedSounds);
       setSounds(loadedSounds);
 
       const interval = setInterval(() => {
@@ -66,6 +68,7 @@ export const SoundManagerProvider = ({ children }) => {
   }, []);
 
   const playSoundById = async (id: number, volume: number = 0.33) => {
+    console.log("playSoundById", id, volume);
     const soundObjs = sounds.get(id);
     if (soundObjs) {
       const availableSoundObj = soundObjs.find(
