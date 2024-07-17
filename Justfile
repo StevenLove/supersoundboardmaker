@@ -28,9 +28,9 @@ truncate-beginning PATH SECONDS:
 
 updateSoundBank:
     just normalize sfx
-    rm -rf ./expo-app/generated/sfx
-    mkdir -p ./expo-app/generated/sfx
-    mv normalized/* ./expo-app/generated/sfx
+    rm -rf ./expo-app/assets/generated/sfx
+    mkdir -p ./expo-app/assets/generated/sfx
+    mv normalized/* ./expo-app/assets/generated/sfx
     rm -rf normalized
     node ./expo-app/scripts/update-soundBank-json.js
 

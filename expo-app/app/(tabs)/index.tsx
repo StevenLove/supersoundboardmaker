@@ -4,7 +4,7 @@ import {
   SoundManagerProvider,
   useSoundManager,
 } from "../../components/SoundManager"; // Adjust the import path accordingly
-import soundBank from "../../generated/soundBank.js";
+import soundBank from "../../assets/generated/soundBank.js";
 import SoundButton from "../../components/SoundButton"; // Adjust the import path accordingly
 
 export default function App() {
@@ -39,7 +39,7 @@ const SoundBoard = () => {
       ...new Set(
         soundBank
           .filter((sound) => {
-            return sound.path.split("/").length > 4;
+            return sound.path.split("/").length > 3;
           })
           .map((sound) => {
             return sound.path.split("/").slice(0, -1).join("/");
@@ -60,7 +60,7 @@ const SoundBoard = () => {
       }),
       ...soundBank
         .filter((sound) => {
-          return sound.path.split("/").length == 4;
+          return sound.path.split("/").length == 3;
         })
         .map((sound) => {
           return { name: sound.name, id: sound.id };

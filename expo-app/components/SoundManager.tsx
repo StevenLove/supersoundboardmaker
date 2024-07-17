@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Audio } from "expo-av";
-import soundBank from "../generated/soundBank.js";
+import soundBank from "../assets/generated/soundBank.js";
 
 const FADE_STEP = 0.3;
 const FADE_INTERVAL = 50;

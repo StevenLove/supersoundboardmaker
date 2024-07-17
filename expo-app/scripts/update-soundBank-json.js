@@ -2,11 +2,15 @@ const fs = require("fs");
 const path = require("path");
 
 // Path to the directory containing your song files
-const songsDirectoryRelative = "../generated/sfx";
+const songsDirectoryRelative = "../assets/generated/sfx";
 const songsDirectory = path.join(__dirname, songsDirectoryRelative);
 
 // Path to the JSON file that will store the soundBank
-const soundbankFile = path.join(__dirname, "../generated", "soundBank.json");
+const soundbankFile = path.join(
+  __dirname,
+  "../assets/generated",
+  "soundBank.json"
+);
 
 const loadExistingSoundbank = (filepath) => {
   if (fs.existsSync(filepath)) {
@@ -46,7 +50,11 @@ const generateSoundbank = (directory, existingSoundbank) => {
   });
 
   songFiles.forEach((filePath, index) => {
-    const relativePath = path.relative(__dirname, filePath);
+    // dirname looks like /Users/stevenlove/programming/babyprojects/soundboardmaker/expo-app/scripts
+    // filePath looks like /Users/stevenlove/programming/babyprojects/soundboardmaker/expo-app/assets/generated/sfx/yoshi/yoshi_9.wav
+    // we need to calculate ./sfx/yoshi/yoshi_9.wav
+    let relativePath = path.relative(__dirname, filePath);
+    relativePath = "./" + path.relative("../assets/generated", relativePath);
     if (!existingFiles.has(relativePath)) {
       let nextId = 0;
       while (soundbank.find((sound) => sound.id === nextId)) {
@@ -89,7 +97,11 @@ function updateImportableJSFile() {
   // write to file
   //     "file": "../assets/songs/Secret of Evermore OST - Hall of Colosia (Extended) [IcWGih3nojI].mp3",
   js = js.replaceAll(/"file": "(.*?)"/g, '"file": require("$1")');
-  const importableFile = path.join(__dirname, "../generated", "soundBank.js");
+  const importableFile = path.join(
+    __dirname,
+    "../assets/generated",
+    "soundBank.js"
+  );
   fs.writeFileSync(importableFile, js, "utf8");
 }
 
