@@ -1,12 +1,15 @@
 {
   "expo": {
-    "name": "bgdj",
-    "slug": "bgdj",
+    "name": "supersoundboardmaker",
+    "slug": "supersoundboardmaker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "experiments": {
+      "baseUrl": "/supersoundboardmaker"
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
