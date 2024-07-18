@@ -2,33 +2,26 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Audio } from "expo-av";
 import soundBank from "@assets/generated/soundBank.js";
 
-const FADE_STEP = 0.3;
-const FADE_INTERVAL = 50;
+const FADE_STEP = 0.01;
+const FADE_INTERVAL = 200;
 
 const SoundManagerContext = createContext({
   playSoundById: (id: number, volume: number) => {},
   stopAllSounds: () => {},
+  stopAllSounds2: () => {},
   stopSound: (id: number) => {},
   isPlaying: (id: number) => false,
+  getInfo: () => "default title",
 });
 
 export const SoundManagerProvider = ({ children }) => {
   const [sounds, setSounds] = useState(new Map());
+  const [intervals, setIntervals] = useState(0);
 
   useEffect(() => {
     const loadSoundBank = async () => {
-      const x = require("@assets/generated/sfx/gavin/slice_8.wav");
-      window.x = x;
-
-      window.soundBank = soundBank;
       const loadedSounds = new Map();
       for (const sound of soundBank) {
-        let path = sound.path;
-        console.log("loading sound with path", path);
-        // if we are on github pages, we need to adjust the path
-        // if (window.location.href.includes("github.io")) {
-        //   path = path?.replace("github.io", "github.io/supersoundboardmaker");
-        // }
         const { sound: soundObj } = await Audio.Sound.createAsync(sound.file);
         await soundObj.setVolumeAsync(0); // Start with volume at 0
         loadedSounds.set(sound.id, [
@@ -45,11 +38,13 @@ export const SoundManagerProvider = ({ children }) => {
       setSounds(loadedSounds);
 
       const interval = setInterval(() => {
+        setIntervals((prev) => prev + 1); // Use functional update form
+
         loadedSounds.forEach((soundObjs) => {
           soundObjs.forEach(async (soundObj) => {
             if (soundObj.currentVolume !== soundObj.targetVolume) {
               let nextVolume;
-              let diff = soundObj.targetVolume - soundObj.currentVolume;
+              const diff = soundObj.targetVolume - soundObj.currentVolume;
               if (Math.abs(diff) < FADE_STEP) {
                 nextVolume = soundObj.targetVolume;
               } else {
@@ -58,8 +53,8 @@ export const SoundManagerProvider = ({ children }) => {
               }
               await soundObj.sound.setVolumeAsync(nextVolume);
               if (nextVolume === 0 && soundObj?.isPlaying) {
-                await soundObj.sound.stopAsync();
                 soundObj.isPlaying = false;
+                soundObj.sound.stopAsync();
               }
               soundObj.currentVolume = nextVolume;
             }
@@ -78,16 +73,14 @@ export const SoundManagerProvider = ({ children }) => {
   }, []);
 
   const playSoundById = async (id: number, volume: number = 0.33) => {
-    console.log("playSoundById", id, volume);
     const soundObjs = sounds.get(id);
     if (soundObjs) {
       const availableSoundObj = soundObjs.find(
         (soundObj) => !soundObj.isPlaying
       );
       if (availableSoundObj) {
-        if (volume > 1) console.warn("Volume should be between 0 and 1");
-        if (volume < 0) console.warn("Volume should be between 0 and 1");
-        console.log("volume", volume);
+        if (volume > 1 || volume < 0)
+          console.warn("Volume should be between 0 and 1");
         availableSoundObj.targetVolume = Math.min(Math.max(volume, 0), 1);
         await availableSoundObj.sound.replayAsync();
         availableSoundObj.isPlaying = true;
@@ -127,7 +120,6 @@ export const SoundManagerProvider = ({ children }) => {
         soundObj.targetVolume = 0;
         if (soundObj.isPlaying) {
           await soundObj.sound.stopAsync();
-          soundObj.isPlaying = false;
         }
       }
       setSounds(new Map(sounds)); // Trigger re-render
@@ -139,6 +131,16 @@ export const SoundManagerProvider = ({ children }) => {
     updatedSounds.forEach((soundObjs) => {
       soundObjs.forEach(async (soundObj) => {
         soundObj.targetVolume = 0;
+      });
+    });
+    setSounds(updatedSounds);
+  };
+
+  const stopAllSounds2 = async () => {
+    const updatedSounds = new Map(sounds);
+    updatedSounds.forEach((soundObjs) => {
+      soundObjs.forEach(async (soundObj) => {
+        soundObj.sound.stopAsync();
         soundObj.isPlaying = false;
       });
     });
@@ -150,9 +152,20 @@ export const SoundManagerProvider = ({ children }) => {
     return soundObjs?.some((soundObj) => soundObj.isPlaying);
   };
 
+  const getInfo = () => {
+    return "intervals: " + intervals;
+  };
+
   return (
     <SoundManagerContext.Provider
-      value={{ playSoundById, stopAllSounds, stopSound, isPlaying }}
+      value={{
+        playSoundById,
+        stopAllSounds,
+        stopAllSounds2,
+        stopSound,
+        isPlaying,
+        getInfo,
+      }}
     >
       {children}
     </SoundManagerContext.Provider>

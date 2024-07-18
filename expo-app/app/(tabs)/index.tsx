@@ -30,8 +30,14 @@ type PlayableDirectory = {
 type Playable = PlayableSound | PlayableDirectory;
 
 const SoundBoard = () => {
-  const { playSoundById, stopAllSounds, stopSound, isPlaying } =
-    useSoundManager();
+  const {
+    playSoundById,
+    stopAllSounds,
+    stopAllSounds2,
+    stopSound,
+    isPlaying,
+    getInfo,
+  } = useSoundManager();
 
   // iterate over the soundBank and extract the directories into a set
   const directories = React.useMemo(() => {
@@ -139,6 +145,8 @@ const SoundBoard = () => {
         contentContainerStyle={styles.flatListContainer}
       />
       <Button title="Stop All Sounds" onPress={stopAllSounds} />
+      <Button title="Stop All Sounds 2" onPress={stopAllSounds2} />
+      <Button title={getInfo()} onPress={() => {}} />
     </View>
   );
 };
