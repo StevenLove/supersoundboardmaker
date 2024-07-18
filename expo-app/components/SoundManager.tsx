@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Audio } from "expo-av";
-import soundBank from "../assets/generated/soundBank.js";
+import soundBank from "@assets/generated/soundBank.js";
 
 const FADE_STEP = 0.3;
 const FADE_INTERVAL = 50;
@@ -17,8 +17,18 @@ export const SoundManagerProvider = ({ children }) => {
 
   useEffect(() => {
     const loadSoundBank = async () => {
+      const x = require("@assets/generated/sfx/gavin/slice_8.wav");
+      window.x = x;
+
+      window.soundBank = soundBank;
       const loadedSounds = new Map();
       for (const sound of soundBank) {
+        let path = sound.path;
+        console.log("loading sound with path", path);
+        // if we are on github pages, we need to adjust the path
+        // if (window.location.href.includes("github.io")) {
+        //   path = path?.replace("github.io", "github.io/supersoundboardmaker");
+        // }
         const { sound: soundObj } = await Audio.Sound.createAsync(sound.file);
         await soundObj.setVolumeAsync(0); // Start with volume at 0
         loadedSounds.set(sound.id, [

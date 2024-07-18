@@ -17,3 +17,19 @@ You put .mp3 files into a folder, run a command, and the app generates the sound
 3. Run `just updateSoundBank`
 4. Start the expo server with `cd expo-app && yarn start`
 5. Navigate to localhost:8081 or scan the QR code to open the app on your phone
+
+
+
+### GH-Pages
+to host on gh-pages, there is an issue where relative URLs in our expo project will expect to be served from the root of the domain but they are actually served from a subdirectory (username.github.io/repo-name). To fix this, we need to add to expo's `app.json` config file
+
+```json
+{
+  "experiments": {
+    "baseUrl": "/supersoundboardmaker"
+  }
+}
+```
+
+to publish to gh-pages we can run `just gh-pages` except this subdirectory stuff isn't working yet
+so instead, run `just build` which builds the project into the expo-app/dist/ directory. Then manually modify index.html's <script> tag to point to the correct path by prepending it with /supersoundboardmaker/. Then run `just publish` to publish the dist/ directory to gh-pages.

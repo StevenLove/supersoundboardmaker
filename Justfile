@@ -49,9 +49,10 @@ normalize DIRECTORY:
         "$output_dir"; \
     echo "$output_dir"; \
     ' {} \;
-
+build:
+    cd expo-app && npx expo export -p web
+publish:
+    npx gh-pages -t -d expo-app/dist
 gh-pages:
-    cd expo-app
-    npx expo export -p web
-    cd ..
+    cd expo-app && npx expo export -p web
     npx gh-pages -t -d expo-app/dist

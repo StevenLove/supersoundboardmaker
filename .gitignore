@@ -2,4 +2,4 @@ sfx/*
 !sfx/.gitkeep
 .DS_Store
 backup
-expo-app/generated
+expo-app/assets/generated

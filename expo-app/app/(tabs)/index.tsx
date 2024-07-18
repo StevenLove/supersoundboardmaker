@@ -3,9 +3,9 @@ import { Button, View, StyleSheet, FlatList } from "react-native";
 import {
   SoundManagerProvider,
   useSoundManager,
-} from "../../components/SoundManager"; // Adjust the import path accordingly
-import soundBank from "../../assets/generated/soundBank.js";
-import SoundButton from "../../components/SoundButton"; // Adjust the import path accordingly
+} from "@components/SoundManager"; // Adjust the import path accordingly
+import soundBank from "@assets/generated/soundBank.js";
+import SoundButton from "@components/SoundButton"; // Adjust the import path accordingly
 
 export default function App() {
   return (

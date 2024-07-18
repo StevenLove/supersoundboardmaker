@@ -50,9 +50,6 @@ const generateSoundbank = (directory, existingSoundbank) => {
   });
 
   songFiles.forEach((filePath, index) => {
-    // dirname looks like /Users/stevenlove/programming/babyprojects/soundboardmaker/expo-app/scripts
-    // filePath looks like /Users/stevenlove/programming/babyprojects/soundboardmaker/expo-app/assets/generated/sfx/yoshi/yoshi_9.wav
-    // we need to calculate ./sfx/yoshi/yoshi_9.wav
     let relativePath = path.relative(__dirname, filePath);
     relativePath = "./" + path.relative("../assets/generated", relativePath);
     if (!existingFiles.has(relativePath)) {
