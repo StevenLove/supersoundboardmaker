@@ -144,9 +144,9 @@ const SoundBoard = () => {
         columnWrapperStyle={styles.row}
         contentContainerStyle={styles.flatListContainer}
       />
-      <Button title="Stop All Sounds" onPress={stopAllSounds} />
-      <Button title="Stop All Sounds 2" onPress={stopAllSounds2} />
-      <Button title={getInfo()} onPress={() => {}} />
+      <Button title="Stop Slow" onPress={stopAllSounds} />
+      <Button title="Stop Now" onPress={stopAllSounds2} />
+      {/* <Button title={getInfo()} onPress={() => {}} /> */}
     </View>
   );
 };

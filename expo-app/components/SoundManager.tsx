@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Audio } from "expo-av";
 import soundBank from "@assets/generated/soundBank.js";
 
-const FADE_STEP = 0.01;
-const FADE_INTERVAL = 200;
+const FADE_STEP = 0.3;
+const FADE_INTERVAL = 50;
+const NO_FADE = true;
 
 const SoundManagerContext = createContext({
   playSoundById: (id: number, volume: number) => {},
@@ -36,7 +37,9 @@ export const SoundManagerProvider = ({ children }) => {
       console.log("soundbank", soundBank);
       console.log("loaded sounds", loadedSounds);
       setSounds(loadedSounds);
-
+      if (NO_FADE) {
+        return () => {};
+      }
       const interval = setInterval(() => {
         setIntervals((prev) => prev + 1); // Use functional update form
 
@@ -82,6 +85,7 @@ export const SoundManagerProvider = ({ children }) => {
         if (volume > 1 || volume < 0)
           console.warn("Volume should be between 0 and 1");
         availableSoundObj.targetVolume = Math.min(Math.max(volume, 0), 1);
+        await availableSoundObj.sound.setVolumeAsync(NO_FADE ? volume : 0);
         await availableSoundObj.sound.replayAsync();
         availableSoundObj.isPlaying = true;
         availableSoundObj.sound.setOnPlaybackStatusUpdate(async (status) => {
@@ -101,11 +105,10 @@ export const SoundManagerProvider = ({ children }) => {
         const { sound: newSoundObj } = await Audio.Sound.createAsync(
           soundBank.find((s) => s.id === id).file
         );
-        await newSoundObj.setVolumeAsync(0);
         soundObjs.push({
           sound: newSoundObj,
-          currentVolume: 0,
-          targetVolume: 0,
+          currentVolume: NO_FADE ? volume : 0,
+          targetVolume: NO_FADE ? volume : 0,
           isPlaying: false,
         });
         setSounds(new Map(sounds)); // Trigger re-render
@@ -120,6 +123,7 @@ export const SoundManagerProvider = ({ children }) => {
         soundObj.targetVolume = 0;
         if (soundObj.isPlaying) {
           await soundObj.sound.stopAsync();
+          soundObj.isPlaying = false;
         }
       }
       setSounds(new Map(sounds)); // Trigger re-render
